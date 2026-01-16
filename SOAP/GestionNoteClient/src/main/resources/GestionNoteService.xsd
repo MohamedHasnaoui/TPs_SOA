@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- Published by XML-WS Runtime (https://github.com/eclipse-ee4j/metro-jax-ws). Runtime's version is XML-WS Runtime 4.0.2 git-revision#0264419. --><xs:schema xmlns:tns="http://example.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://example.org/">
+
+<xs:element name="ajouterEtudiant" type="tns:ajouterEtudiant"></xs:element>
+
+<xs:element name="ajouterEtudiantResponse" type="tns:ajouterEtudiantResponse"></xs:element>
+
+<xs:element name="etudiant" type="tns:etudiant"></xs:element>
+
+<xs:element name="getEtudiantsTries" type="tns:getEtudiantsTries"></xs:element>
+
+<xs:element name="getEtudiantsTriesResponse" type="tns:getEtudiantsTriesResponse"></xs:element>
+
+<xs:element name="getEtudiantsValidant" type="tns:getEtudiantsValidant"></xs:element>
+
+<xs:element name="getEtudiantsValidantResponse" type="tns:getEtudiantsValidantResponse"></xs:element>
+
+<xs:element name="getMajorant" type="tns:getMajorant"></xs:element>
+
+<xs:element name="getMajorantResponse" type="tns:getMajorantResponse"></xs:element>
+
+<xs:element name="getNote" type="tns:getNote"></xs:element>
+
+<xs:element name="getNoteFinalAvecAbsence" type="tns:getNoteFinalAvecAbsence"></xs:element>
+
+<xs:element name="getNoteFinalAvecAbsenceResponse" type="tns:getNoteFinalAvecAbsenceResponse"></xs:element>
+
+<xs:element name="getNoteResponse" type="tns:getNoteResponse"></xs:element>
+
+<xs:complexType name="getNoteFinalAvecAbsence">
+<xs:sequence>
+<xs:element name="cne" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getNoteFinalAvecAbsenceResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:double"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ajouterEtudiant">
+<xs:sequence>
+<xs:element name="etudiant" type="tns:etudiant" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="etudiant">
+<xs:sequence>
+<xs:element name="nom" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="prenom" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="cne" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="note1" type="xs:double"></xs:element>
+<xs:element name="note2" type="xs:double"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ajouterEtudiantResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:boolean"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getNote">
+<xs:sequence>
+<xs:element name="nom" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getNoteResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:double"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getEtudiantsValidant">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getEtudiantsValidantResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:etudiant" minOccurs="0" maxOccurs="unbounded"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getEtudiantsTries">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getEtudiantsTriesResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:etudiant" minOccurs="0" maxOccurs="unbounded"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getMajorant">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getMajorantResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:etudiant" minOccurs="0" maxOccurs="unbounded"></xs:element>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

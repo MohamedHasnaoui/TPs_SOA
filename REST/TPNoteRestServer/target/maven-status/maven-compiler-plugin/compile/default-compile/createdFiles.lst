@@ -1,0 +1,6 @@
+org\example\RestApplication.class
+org\example\Etudiant.class
+org\example\NoteFinalResponse.class
+org\example\AbsenceServiceClient.class
+org\example\AbsenceServiceClient$AbsenceStudent.class
+org\example\NoteResource.class
