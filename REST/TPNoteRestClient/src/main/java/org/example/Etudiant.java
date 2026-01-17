@@ -1,8 +1,11 @@
 package org.example;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Classe représentant un étudiant avec ses notes.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Etudiant {
     private String nom;
     private String prenom;

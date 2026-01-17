@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.example.Student;
+import org.glassfish.jersey.jackson.JacksonFeature;
 
 import java.util.List;
 
@@ -17,13 +18,16 @@ public class StudentServiceClient {
     private final WebTarget target;
 
     public StudentServiceClient() {
-        this.client = ClientBuilder.newClient();
+        this.client = ClientBuilder.newBuilder()
+                .register(JacksonFeature.class)
+                .build();
         this.target = client.target(BASE_URI).path("students");
     }
 
     public List<Student> getAllStudents() {
         Response response = target.request(MediaType.APPLICATION_JSON).get();
-        return response.readEntity(new GenericType<List<Student>>() {});
+        return response.readEntity(new GenericType<List<Student>>() {
+        });
     }
 
     public Student getStudent(String cne) {
@@ -51,7 +55,8 @@ public class StudentServiceClient {
     public List<Student> getBlacklist(double threshold) {
         Response response = target.path("blacklist").queryParam("threshold", threshold)
                 .request(MediaType.APPLICATION_JSON).get();
-        return response.readEntity(new GenericType<List<Student>>() {});
+        return response.readEntity(new GenericType<List<Student>>() {
+        });
     }
 
     public void close() {

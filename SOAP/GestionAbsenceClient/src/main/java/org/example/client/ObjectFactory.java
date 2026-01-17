@@ -31,6 +31,8 @@ public class ObjectFactory {
     private final static QName _Delete_QNAME = new QName("http://service.example.org/", "delete");
     private final static QName _DeleteResponse_QNAME = new QName("http://service.example.org/", "deleteResponse");
     private final static QName _Etudiant_QNAME = new QName("http://service.example.org/", "etudiant");
+    private final static QName _GetTauxAbsenceByCne_QNAME = new QName("http://service.example.org/", "getTauxAbsenceByCne");
+    private final static QName _GetTauxAbsenceByCneResponse_QNAME = new QName("http://service.example.org/", "getTauxAbsenceByCneResponse");
     private final static QName _Read_QNAME = new QName("http://service.example.org/", "read");
     private final static QName _ReadResponse_QNAME = new QName("http://service.example.org/", "readResponse");
     private final static QName _Update_QNAME = new QName("http://service.example.org/", "update");
@@ -97,6 +99,22 @@ public class ObjectFactory {
      */
     public Etudiant createEtudiant() {
         return new Etudiant();
+    }
+
+    /**
+     * Create an instance of {@link GetTauxAbsenceByCne }
+     * 
+     */
+    public GetTauxAbsenceByCne createGetTauxAbsenceByCne() {
+        return new GetTauxAbsenceByCne();
+    }
+
+    /**
+     * Create an instance of {@link GetTauxAbsenceByCneResponse }
+     * 
+     */
+    public GetTauxAbsenceByCneResponse createGetTauxAbsenceByCneResponse() {
+        return new GetTauxAbsenceByCneResponse();
     }
 
     /**
@@ -220,6 +238,32 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://service.example.org/", name = "etudiant")
     public JAXBElement<Etudiant> createEtudiant(Etudiant value) {
         return new JAXBElement<Etudiant>(_Etudiant_QNAME, Etudiant.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetTauxAbsenceByCne }{@code >}
+     * 
+     * @param value
+     *     Java instance representing xml element's value.
+     * @return
+     *     the new instance of {@link JAXBElement }{@code <}{@link GetTauxAbsenceByCne }{@code >}
+     */
+    @XmlElementDecl(namespace = "http://service.example.org/", name = "getTauxAbsenceByCne")
+    public JAXBElement<GetTauxAbsenceByCne> createGetTauxAbsenceByCne(GetTauxAbsenceByCne value) {
+        return new JAXBElement<GetTauxAbsenceByCne>(_GetTauxAbsenceByCne_QNAME, GetTauxAbsenceByCne.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetTauxAbsenceByCneResponse }{@code >}
+     * 
+     * @param value
+     *     Java instance representing xml element's value.
+     * @return
+     *     the new instance of {@link JAXBElement }{@code <}{@link GetTauxAbsenceByCneResponse }{@code >}
+     */
+    @XmlElementDecl(namespace = "http://service.example.org/", name = "getTauxAbsenceByCneResponse")
+    public JAXBElement<GetTauxAbsenceByCneResponse> createGetTauxAbsenceByCneResponse(GetTauxAbsenceByCneResponse value) {
+        return new JAXBElement<GetTauxAbsenceByCneResponse>(_GetTauxAbsenceByCneResponse_QNAME, GetTauxAbsenceByCneResponse.class, null, value);
     }
 
     /**

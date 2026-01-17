@@ -80,6 +80,21 @@ public interface AbsenceService {
      * 
      * @param arg0
      * @return
+     *     returns double
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "getTauxAbsenceByCne", targetNamespace = "http://service.example.org/", className = "org.example.client.GetTauxAbsenceByCne")
+    @ResponseWrapper(localName = "getTauxAbsenceByCneResponse", targetNamespace = "http://service.example.org/", className = "org.example.client.GetTauxAbsenceByCneResponse")
+    @Action(input = "http://service.example.org/AbsenceService/getTauxAbsenceByCneRequest", output = "http://service.example.org/AbsenceService/getTauxAbsenceByCneResponse")
+    public double getTauxAbsenceByCne(
+        @WebParam(name = "arg0", targetNamespace = "")
+        String arg0);
+
+    /**
+     * 
+     * @param arg0
+     * @return
      *     returns java.util.List<org.example.client.Etudiant>
      */
     @WebMethod

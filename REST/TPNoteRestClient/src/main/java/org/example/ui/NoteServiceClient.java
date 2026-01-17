@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.example.Etudiant;
 import org.example.NoteFinalResponse;
+import org.glassfish.jersey.jackson.JacksonFeature;
 
 import java.util.List;
 
@@ -22,7 +23,9 @@ public class NoteServiceClient {
     private final WebTarget target;
 
     public NoteServiceClient() {
-        this.client = ClientBuilder.newClient();
+        this.client = ClientBuilder.newBuilder()
+                .register(JacksonFeature.class)
+                .build();
         this.target = client.target(BASE_URI).path("notes");
     }
 

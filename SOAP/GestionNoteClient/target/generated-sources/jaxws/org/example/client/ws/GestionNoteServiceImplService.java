@@ -17,7 +17,7 @@ import jakarta.xml.ws.WebServiceFeature;
  * Generated source version: 3.0
  * 
  */
-@WebServiceClient(name = "GestionNoteServiceImplService", targetNamespace = "http://example.org/", wsdlLocation = "file:/C:/Users/Windownet/Desktop/microservices/SOAP/GestionNoteClient/src/main/resources/GestionNoteService.wsdl")
+@WebServiceClient(name = "GestionNoteServiceImplService", targetNamespace = "http://example.org/", wsdlLocation = "file:/C:/Users/WIndownet/Desktop/TPs_SOA/SOAP/GestionNoteClient/src/main/resources/GestionNoteService.wsdl")
 public class GestionNoteServiceImplService
     extends Service
 {
@@ -30,7 +30,7 @@ public class GestionNoteServiceImplService
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("file:/C:/Users/Windownet/Desktop/microservices/SOAP/GestionNoteClient/src/main/resources/GestionNoteService.wsdl");
+            url = new URL("file:/C:/Users/WIndownet/Desktop/TPs_SOA/SOAP/GestionNoteClient/src/main/resources/GestionNoteService.wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }

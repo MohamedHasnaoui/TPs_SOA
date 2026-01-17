@@ -63,7 +63,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>org.example.client.ClientApp</mainClass>
+                            <mainClass>org.example.client.GestionAbsenceUI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
