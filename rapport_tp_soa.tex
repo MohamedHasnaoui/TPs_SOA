@@ -1,0 +1,785 @@
+\documentclass[12pt,a4paper]{report}
+
+% ==================== PACKAGES ====================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{listings}
+
+% ==================== CONFIGURATION ====================
+\geometry{margin=2.5cm}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!60!black,
+    urlcolor=blue!60!black
+}
+
+% Style des titres
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries\color{blue!60!black}}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+
+\titleformat{\section}
+{\normalfont\Large\bfseries\color{blue!50!black}}{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\normalfont\large\bfseries\color{blue!40!black}}{\thesubsection}{1em}{}
+
+% En-tête et pied de page
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{ENSA Fès}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ==================== DOCUMENT ====================
+\begin{document}
+
+% ==================== PAGE DE GARDE ====================
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+
+    {\Large \textbf{École Nationale des Sciences Appliquées de Fès}}\\[0.5cm]
+    {\large Université Sidi Mohamed Ben Abdellah}\\[2cm]
+
+    % Placeholder pour le logo
+    % \includegraphics[width=4cm]{logo_ensa.png}\\[1.5cm]
+    {\color{gray}\framebox[4cm]{\rule{0pt}{3cm}\textit{Logo ENSA}}}\\[1.5cm]
+
+    \rule{\linewidth}{0.5mm}\\[0.4cm]
+    {\Huge \textbf{Compte Rendu des Travaux Pratiques}}\\[0.2cm]
+    {\huge \textbf{Architecture Orientée Services (SOA)}}\\[0.2cm]
+    \rule{\linewidth}{0.5mm}\\[1.5cm]
+
+    {\Large \textbf{TP 1 :} Gestion des Notes}\\[0.3cm]
+    {\Large \textbf{TP 2 :} Gestion de l'Absentéisme}\\[2cm]
+
+    \begin{minipage}{0.45\textwidth}
+        \begin{flushleft}
+            \large
+            \textbf{Réalisé par :}\\
+            Mohamed El Hasnaoui
+        \end{flushleft}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \begin{flushright}
+            \large
+            \textbf{Encadré par :}\\
+            Pr. [Nom du Professeur]
+        \end{flushright}
+    \end{minipage}\\[2cm]
+
+    {\large \textbf{Filière :} Génie Informatique -- 4\textsuperscript{ème} Année}\\[0.5cm]
+
+    \vfill
+    {\large \textbf{Année Universitaire : 2025/2026}}
+\end{titlepage}
+
+% ==================== TABLE DES MATIÈRES ====================
+\tableofcontents
+\newpage
+
+% ==================== INTRODUCTION ====================
+\chapter{Introduction}
+
+\section{Contexte}
+
+L'Architecture Orientée Services (SOA) représente un paradigme fondamental dans le développement des systèmes d'information modernes. Elle permet de concevoir des applications sous forme de services indépendants, interopérables et réutilisables, communiquant via des protocoles standardisés.
+
+Dans le cadre de notre formation en Génie Informatique à l'ENSA de Fès, nous avons réalisé deux travaux pratiques visant à maîtriser les différentes approches de développement d'applications orientées services :
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{TP 1 -- Gestion des Notes :} Service permettant la gestion des notes d'étudiants d'un module donné, avec des fonctionnalités de calcul de moyennes, identification des étudiants validants et majorants.
+    \item \textbf{TP 2 -- Gestion de l'Absentéisme :} Application orientée service pour le suivi et la gestion de l'absentéisme étudiant, incluant l'élaboration de statistiques et la création de listes noires.
+\end{itemize}
+
+\section{Objectifs pédagogiques}
+
+Ces travaux pratiques visent à :
+
+\begin{enumerate}[leftmargin=*]
+    \item Comprendre les principes fondamentaux de l'architecture SOA
+    \item Maîtriser le développement de services web avec différentes technologies (SOAP, REST)
+    \item Implémenter une architecture microservices avec Spring Boot
+    \item Appliquer les bonnes pratiques de conteneurisation avec Docker
+    \item Mettre en œuvre la communication inter-services
+\end{enumerate}
+
+\section{Technologies utilisées}
+
+Nous avons implémenté ces deux TPs selon trois approches distinctes :
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|l|X|}
+        \hline
+        \textbf{Approche} & \textbf{Technologies} \\
+        \hline
+        SOAP & JAX-WS, WSDL, XML, Apache CXF \\
+        \hline
+        REST & JAX-RS, Jersey, JSON, HTTP \\
+        \hline
+        Microservices & Spring Boot, Spring Cloud, Eureka, API Gateway, PostgreSQL, Docker \\
+        \hline
+    \end{tabularx}
+    \caption{Technologies utilisées par approche}
+\end{table}
+
+% ==================== PRÉSENTATION GÉNÉRALE ====================
+\chapter{Présentation Générale du Projet}
+
+\section{Description fonctionnelle}
+
+\subsection{Service de Gestion des Notes (TP 1)}
+
+Le service de gestion des notes permet de gérer les informations académiques des étudiants d'un module donné. Chaque étudiant est caractérisé par :
+
+\begin{itemize}[leftmargin=*]
+    \item Un nom et un prénom
+    \item Un Code National Étudiant (CNE)
+    \item Des notes d'évaluation (contrôle continu, travaux pratiques, examen)
+\end{itemize}
+
+\textbf{Opérations offertes par le service :}
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{ajouterEtudiant} : Ajoute un nouvel étudiant au système
+    \item \textbf{getNote} : Retourne la note associée à un étudiant donné
+    \item \textbf{getEtudiantsValidant} : Retourne la liste des étudiants ayant validé le module (moyenne $\geq$ 12)
+    \item \textbf{getMajorant} : Identifie les étudiants ayant obtenu la meilleure note
+    \item \textbf{getEtudiantsTries} : Retourne les étudiants triés par ordre décroissant de notes
+\end{enumerate}
+
+\subsection{Service de Gestion de l'Absentéisme (TP 2)}
+
+Ce service vise à lutter contre le fléau de l'absentéisme en permettant le suivi des étudiants non assidus. Les informations gérées incluent :
+
+\begin{itemize}[leftmargin=*]
+    \item Informations personnelles (nom, prénom, CNE)
+    \item Niveau d'études
+    \item Nombre d'heures d'absence
+\end{itemize}
+
+\textbf{Opérations CRUD et métier :}
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Add (Create)} : Enregistre un nouvel étudiant avec ses heures d'absence
+    \item \textbf{Read} : Retourne le taux d'absence d'un étudiant
+    \item \textbf{Update} : Met à jour les informations d'un étudiant
+    \item \textbf{Delete} : Supprime un étudiant de la liste
+    \item \textbf{BlackListCreate} : Génère une liste noire des étudiants avec un taux d'absence $\geq$ 50\%
+\end{enumerate}
+
+\subsection{Interaction entre les services}
+
+Une fonctionnalité clé de ce projet est l'interaction entre les deux services. Le calcul de la note finale intègre le taux d'absentéisme selon la formule :
+
+\begin{center}
+    \fbox{$N = M - T \times M = M \times (1 - T)$}
+\end{center}
+
+Où :
+\begin{itemize}[leftmargin=*]
+    \item $N$ = Note finale du module
+    \item $M$ = Moyenne des notes obtenues
+    \item $T$ = Taux d'absence de l'étudiant (en pourcentage)
+\end{itemize}
+
+\section{Architecture globale}
+
+% Placeholder pour le diagramme d'architecture globale
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.9\textwidth]{architecture_globale.png}
+    {\color{gray}\framebox[14cm]{\rule{0pt}{8cm}\textit{Diagramme d'architecture globale du projet}}}
+    \caption{Architecture globale montrant les trois implémentations}
+    \label{fig:archi_globale}
+\end{figure}
+
+% ==================== APPROCHE SOAP ====================
+\chapter{Implémentation avec SOAP}
+
+\section{Présentation de SOAP}
+
+SOAP (Simple Object Access Protocol) est un protocole de communication basé sur XML permettant l'échange de messages structurés entre applications distribuées. Il repose sur les standards suivants :
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{WSDL} (Web Services Description Language) : Décrit l'interface du service
+    \item \textbf{XML} : Format d'échange des messages
+    \item \textbf{HTTP/HTTPS} : Protocole de transport
+\end{itemize}
+
+\section{Architecture SOAP}
+
+\subsection{Approche Top-Down}
+
+Nous avons adopté l'approche \textit{Top-Down} (Contract-First) qui consiste à :
+
+\begin{enumerate}[leftmargin=*]
+    \item Définir le contrat WSDL décrivant les opérations du service
+    \item Générer automatiquement les classes Java à partir du WSDL
+    \item Implémenter la logique métier dans les classes générées
+\end{enumerate}
+
+Cette approche garantit une meilleure interopérabilité et un contrat stable entre le client et le serveur.
+
+% Placeholder pour l'architecture SOAP
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.85\textwidth]{architecture_soap.png}
+    {\color{gray}\framebox[13cm]{\rule{0pt}{6cm}\textit{Architecture SOAP avec JAX-WS}}}
+    \caption{Architecture du service SOAP}
+    \label{fig:archi_soap}
+\end{figure}
+
+\subsection{Structure du projet SOAP}
+
+Le projet SOAP est organisé en deux modules distincts :
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|l|X|}
+        \hline
+        \textbf{Module} & \textbf{Description} \\
+        \hline
+        GestionNoteServeur & Implémentation du service JAX-WS avec les opérations métier \\
+        \hline
+        GestionNoteClient & Client SOAP généré à partir du WSDL \\
+        \hline
+        GestionAbsenceServeur & Service de gestion d'absentéisme \\
+        \hline
+        GestionAbsenceClient & Client pour le service d'absence \\
+        \hline
+    \end{tabularx}
+    \caption{Organisation des modules SOAP}
+\end{table}
+
+\section{Fonctionnement}
+
+\subsection{Publication du service}
+
+Le service SOAP est publié via l'API JAX-WS qui génère automatiquement le document WSDL accessible à l'URL du service. Ce document décrit :
+
+\begin{itemize}[leftmargin=*]
+    \item Les types de données (XSD Schema)
+    \item Les messages échangés
+    \item Les opérations disponibles (PortType)
+    \item Les liaisons (Binding)
+    \item L'adresse du service (Endpoint)
+\end{itemize}
+
+\subsection{Invocation du service}
+
+Le client SOAP utilise les classes proxy générées à partir du WSDL. L'invocation suit le processus suivant :
+
+\begin{enumerate}[leftmargin=*]
+    \item Le client crée une instance du service via le stub généré
+    \item La requête est sérialisée en message SOAP/XML
+    \item Le message est transmis via HTTP au serveur
+    \item Le serveur désérialise, exécute l'opération et renvoie la réponse
+    \item Le client reçoit et désérialise la réponse
+\end{enumerate}
+
+% Placeholder pour l'exécution SOAP
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.9\textwidth]{exec_soap_notes.png}
+    {\color{gray}\framebox[14cm]{\rule{0pt}{5cm}\textit{Capture d'écran : Exécution du service Gestion Notes SOAP}}}
+    \caption{Exécution du service de gestion des notes (SOAP)}
+    \label{fig:exec_soap_notes}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.9\textwidth]{exec_soap_absence.png}
+    {\color{gray}\framebox[14cm]{\rule{0pt}{5cm}\textit{Capture d'écran : Exécution du service Gestion Absence SOAP}}}
+    \caption{Exécution du service de gestion d'absence (SOAP)}
+    \label{fig:exec_soap_absence}
+\end{figure}
+
+\section{Avantages et limites de SOAP}
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|X|X|}
+        \hline
+        \textbf{Avantages} & \textbf{Limites} \\
+        \hline
+        Contrat formel (WSDL) & Verbosité des messages XML \\
+        \hline
+        Typage fort & Overhead de parsing XML \\
+        \hline
+        Standards de sécurité (WS-Security) & Complexité de mise en œuvre \\
+        \hline
+        Support des transactions (WS-Transaction) & Performance moindre que REST \\
+        \hline
+    \end{tabularx}
+    \caption{Avantages et limites de SOAP}
+\end{table}
+
+% ==================== APPROCHE REST ====================
+\chapter{Implémentation avec REST}
+
+\section{Présentation de REST}
+
+REST (Representational State Transfer) est un style architectural pour les systèmes distribués, caractérisé par :
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Ressources identifiées par URI} : Chaque entité est accessible via une URL unique
+    \item \textbf{Interface uniforme} : Utilisation des méthodes HTTP (GET, POST, PUT, DELETE)
+    \item \textbf{Sans état} : Chaque requête contient toutes les informations nécessaires
+    \item \textbf{Représentations multiples} : JSON, XML, etc.
+\end{itemize}
+
+\section{Architecture REST}
+
+\subsection{Conception des endpoints}
+
+Les services REST ont été conçus selon les bonnes pratiques RESTful :
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|l|l|X|}
+        \hline
+        \textbf{Méthode} & \textbf{Endpoint} & \textbf{Description} \\
+        \hline
+        \multicolumn{3}{|c|}{\textbf{Service Gestion Notes}} \\
+        \hline
+        GET & /api/etudiants & Liste tous les étudiants \\
+        \hline
+        GET & /api/etudiants/\{id\} & Récupère un étudiant par ID \\
+        \hline
+        POST & /api/etudiants & Ajoute un nouvel étudiant \\
+        \hline
+        PUT & /api/etudiants/\{id\} & Met à jour un étudiant \\
+        \hline
+        DELETE & /api/etudiants/\{id\} & Supprime un étudiant \\
+        \hline
+        GET & /api/etudiants/validant & Étudiants ayant validé \\
+        \hline
+        GET & /api/etudiants/majorant & Étudiants majorants \\
+        \hline
+        \multicolumn{3}{|c|}{\textbf{Service Gestion Absence}} \\
+        \hline
+        GET & /api/etudiants & Liste tous les étudiants \\
+        \hline
+        GET & /api/etudiants/\{id\}/taux-absence & Taux d'absence d'un étudiant \\
+        \hline
+        GET & /api/etudiants/blacklist & Liste noire des absentéistes \\
+        \hline
+        POST & /api/etudiants & Ajoute un étudiant \\
+        \hline
+        PUT & /api/etudiants/\{id\} & Met à jour un étudiant \\
+        \hline
+        DELETE & /api/etudiants/\{id\} & Supprime un étudiant \\
+        \hline
+    \end{tabularx}
+    \caption{Endpoints REST des services}
+\end{table}
+
+% Placeholder pour l'architecture REST
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.85\textwidth]{architecture_rest.png}
+    {\color{gray}\framebox[13cm]{\rule{0pt}{6cm}\textit{Architecture REST avec JAX-RS/Jersey}}}
+    \caption{Architecture du service REST}
+    \label{fig:archi_rest}
+\end{figure}
+
+\subsection{Structure du projet REST}
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|l|X|}
+        \hline
+        \textbf{Module} & \textbf{Description} \\
+        \hline
+        TPNoteRestServer & Service REST JAX-RS pour la gestion des notes \\
+        \hline
+        TPNoteRestClient & Client REST utilisant Jersey Client API \\
+        \hline
+        TPAbsenceRestServer & Service REST pour la gestion d'absence \\
+        \hline
+        TPAbsenceRestClient & Client REST pour le service d'absence \\
+        \hline
+    \end{tabularx}
+    \caption{Organisation des modules REST}
+\end{table}
+
+\section{Technologies utilisées}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{JAX-RS} : API Java standard pour les services RESTful
+    \item \textbf{Jersey} : Implémentation de référence de JAX-RS
+    \item \textbf{Jackson} : Sérialisation/désérialisation JSON
+    \item \textbf{Apache Tomcat} : Serveur d'application
+\end{itemize}
+
+\section{Fonctionnement}
+
+\subsection{Côté serveur}
+
+Les ressources REST sont annotées avec les annotations JAX-RS :
+\begin{itemize}[leftmargin=*]
+    \item \texttt{@Path} : Définit le chemin de la ressource
+    \item \texttt{@GET}, \texttt{@POST}, \texttt{@PUT}, \texttt{@DELETE} : Méthodes HTTP
+    \item \texttt{@Produces}, \texttt{@Consumes} : Types MIME supportés
+    \item \texttt{@PathParam}, \texttt{@QueryParam} : Paramètres de requête
+\end{itemize}
+
+\subsection{Côté client}
+
+Le client REST utilise l'API Jersey Client pour invoquer les services. Le processus inclut :
+\begin{enumerate}[leftmargin=*]
+    \item Création d'une instance Client avec JacksonFeature pour le support JSON
+    \item Construction de la cible (WebTarget) avec l'URL du service
+    \item Invocation de la méthode HTTP appropriée
+    \item Désérialisation de la réponse JSON en objets Java
+\end{enumerate}
+
+% Placeholder pour l'exécution REST
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.9\textwidth]{exec_rest_notes.png}
+    {\color{gray}\framebox[14cm]{\rule{0pt}{5cm}\textit{Capture d'écran : Exécution du service REST Notes}}}
+    \caption{Exécution du service de gestion des notes (REST)}
+    \label{fig:exec_rest_notes}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.9\textwidth]{exec_rest_absence.png}
+    {\color{gray}\framebox[14cm]{\rule{0pt}{5cm}\textit{Capture d'écran : Exécution du service REST Absence}}}
+    \caption{Exécution du service de gestion d'absence (REST)}
+    \label{fig:exec_rest_absence}
+\end{figure}
+
+\section{Comparaison REST vs SOAP}
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|l|X|X|}
+        \hline
+        \textbf{Critère} & \textbf{REST} & \textbf{SOAP} \\
+        \hline
+        Format & JSON (léger) & XML (verbeux) \\
+        \hline
+        Performance & Meilleure & Plus lente \\
+        \hline
+        Contrat & Optionnel (OpenAPI) & Obligatoire (WSDL) \\
+        \hline
+        Courbe d'apprentissage & Facile & Plus complexe \\
+        \hline
+        Flexibilité & Élevée & Rigide \\
+        \hline
+    \end{tabularx}
+    \caption{Comparaison REST vs SOAP}
+\end{table}
+
+% ==================== APPROCHE MICROSERVICES ====================
+\chapter{Implémentation avec Spring Boot et Microservices}
+
+\section{Architecture Microservices}
+
+L'architecture microservices décompose l'application en services autonomes, faiblement couplés et indépendamment déployables. Chaque service :
+
+\begin{itemize}[leftmargin=*]
+    \item Possède sa propre base de données (Database per Service)
+    \item Communique via des protocoles légers (HTTP/REST)
+    \item Peut être développé et déployé indépendamment
+    \item Est organisé autour de capacités métier
+\end{itemize}
+
+\section{Composants de l'architecture}
+
+% Placeholder pour l'architecture microservices
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.95\textwidth]{architecture_microservices.png}
+    {\color{gray}\framebox[15cm]{\rule{0pt}{9cm}\textit{Architecture Microservices complète avec Spring Cloud}}}
+    \caption{Architecture Microservices du projet}
+    \label{fig:archi_microservices}
+\end{figure}
+
+\subsection{Eureka Server (Service Discovery)}
+
+Netflix Eureka est un serveur de découverte de services qui permet :
+
+\begin{itemize}[leftmargin=*]
+    \item L'enregistrement automatique des services au démarrage
+    \item La découverte dynamique des instances disponibles
+    \item Le load balancing côté client
+    \item La tolérance aux pannes (failover)
+\end{itemize}
+
+\textbf{Port :} 8761
+
+% Placeholder pour Eureka Dashboard
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.9\textwidth]{eureka_dashboard.png}
+    {\color{gray}\framebox[14cm]{\rule{0pt}{6cm}\textit{Capture d'écran : Dashboard Eureka avec les services enregistrés}}}
+    \caption{Interface Eureka montrant les services enregistrés}
+    \label{fig:eureka_dashboard}
+\end{figure}
+
+\subsection{API Gateway}
+
+L'API Gateway (Spring Cloud Gateway) est le point d'entrée unique de l'architecture :
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Routage intelligent} : Dirige les requêtes vers les services appropriés
+    \item \textbf{Load Balancing} : Distribue la charge entre les instances
+    \item \textbf{Filtrage} : Applique des transformations sur les requêtes/réponses
+    \item \textbf{Sécurité} : Point centralisé pour l'authentification
+\end{itemize}
+
+\textbf{Port :} 8079
+
+\textbf{Routes configurées :}
+\begin{itemize}[leftmargin=*]
+    \item \texttt{/absence/**} $\rightarrow$ gestion-absence-service
+    \item \texttt{/notes/**} $\rightarrow$ gestion-notes-service
+\end{itemize}
+
+\subsection{Service de Gestion des Notes}
+
+Service métier responsable de la gestion académique des étudiants.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Port :} 8082
+    \item \textbf{Base de données :} PostgreSQL (gestion\_notes\_db)
+    \item \textbf{Entités :} Etudiant (id, nom, prenom, cne, niveau, noteCC, noteTP, noteExam)
+    \item \textbf{Calcul de moyenne :} CC (30\%) + TP (20\%) + Exam (50\%)
+\end{itemize}
+
+\subsection{Service de Gestion d'Absence}
+
+Service métier responsable du suivi de l'absentéisme.
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Port :} 8081
+    \item \textbf{Base de données :} PostgreSQL (gestion\_absence\_db)
+    \item \textbf{Entités :} Etudiant (id, nom, prenom, cne, niveau, heuresAbsence)
+    \item \textbf{Calcul du taux :} (heuresAbsence / 500) × 100
+    \item \textbf{Seuil liste noire :} Taux $\geq$ 50\%
+\end{itemize}
+
+\section{Communication inter-services}
+
+\subsection{OpenFeign Client}
+
+La communication entre le service Notes et le service Absence utilise OpenFeign, un client HTTP déclaratif :
+
+\begin{itemize}[leftmargin=*]
+    \item Définition d'interfaces annotées pour les appels distants
+    \item Intégration automatique avec Eureka pour la découverte
+    \item Load balancing transparent via Spring Cloud LoadBalancer
+    \item Circuit breaker pour la résilience
+\end{itemize}
+
+\textbf{Cas d'usage :} Le service Notes récupère le taux d'absence d'un étudiant auprès du service Absence pour calculer la note finale selon la formule $N = M \times (1 - T)$.
+
+% Placeholder pour la communication inter-services
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.85\textwidth]{communication_feign.png}
+    {\color{gray}\framebox[13cm]{\rule{0pt}{5cm}\textit{Diagramme de communication entre services via Feign}}}
+    \caption{Communication inter-services avec OpenFeign}
+    \label{fig:feign_comm}
+\end{figure}
+
+\section{Persistance des données}
+
+\subsection{Pattern Database per Service}
+
+Chaque microservice possède sa propre base de données PostgreSQL :
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|l|l|l|X|}
+        \hline
+        \textbf{Service} & \textbf{Base} & \textbf{Port} & \textbf{Tables} \\
+        \hline
+        Notes & gestion\_notes\_db & 5432 & etudiants \\
+        \hline
+        Absence & gestion\_absence\_db & 5433 & etudiants \\
+        \hline
+    \end{tabularx}
+    \caption{Configuration des bases de données}
+\end{table}
+
+\subsection{Spring Data JPA}
+
+L'accès aux données utilise Spring Data JPA qui fournit :
+
+\begin{itemize}[leftmargin=*]
+    \item Implémentation automatique des repositories
+    \item Requêtes dérivées du nom des méthodes
+    \item Support des requêtes JPQL personnalisées
+    \item Gestion automatique des transactions
+\end{itemize}
+
+\section{Clients Swing}
+
+Pour faciliter les tests et démonstrations, des clients graphiques Swing ont été développés :
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{NotesSwingClient} : Interface pour la gestion des notes
+    \item \textbf{AbsencesSwingClient} : Interface pour la gestion d'absence
+\end{itemize}
+
+Ces clients utilisent Jersey Client avec JacksonFeature pour communiquer avec les APIs REST.
+
+% Placeholder pour les clients Swing
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.9\textwidth]{swing_notes.png}
+    {\color{gray}\framebox[14cm]{\rule{0pt}{6cm}\textit{Capture d'écran : Client Swing Gestion Notes}}}
+    \caption{Interface Swing du client Notes}
+    \label{fig:swing_notes}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.9\textwidth]{swing_absence.png}
+    {\color{gray}\framebox[14cm]{\rule{0pt}{6cm}\textit{Capture d'écran : Client Swing Gestion Absence}}}
+    \caption{Interface Swing du client Absence}
+    \label{fig:swing_absence}
+\end{figure}
+
+\section{Conteneurisation avec Docker}
+
+\subsection{Avantages de Docker}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Portabilité} : "Build once, run anywhere"
+    \item \textbf{Isolation} : Chaque service dans son conteneur
+    \item \textbf{Reproductibilité} : Environnements identiques
+    \item \textbf{Scalabilité} : Facilité de mise à l'échelle
+\end{itemize}
+
+\subsection{Structure Docker}
+
+Chaque service possède son Dockerfile suivant le pattern multi-stage build :
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Stage Build} : Compilation avec Maven
+    \item \textbf{Stage Runtime} : Image légère avec JRE Alpine
+\end{enumerate}
+
+\subsection{Docker Compose}
+
+L'orchestration des conteneurs est gérée par Docker Compose qui définit :
+
+\begin{itemize}[leftmargin=*]
+    \item Les services (Eureka, Gateway, Notes, Absence, PostgreSQL × 2)
+    \item Le réseau interne (microservices-network)
+    \item Les volumes persistants pour les bases de données
+    \item Les dépendances et ordre de démarrage (healthchecks)
+    \item Les profils Spring (SPRING\_PROFILES\_ACTIVE=docker)
+\end{itemize}
+
+% Placeholder pour Docker
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.9\textwidth]{docker_containers.png}
+    {\color{gray}\framebox[14cm]{\rule{0pt}{5cm}\textit{Capture d'écran : Conteneurs Docker en exécution}}}
+    \caption{Liste des conteneurs Docker}
+    \label{fig:docker_containers}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.9\textwidth]{docker_compose_up.png}
+    {\color{gray}\framebox[14cm]{\rule{0pt}{5cm}\textit{Capture d'écran : Lancement avec docker compose up}}}
+    \caption{Démarrage de l'infrastructure avec Docker Compose}
+    \label{fig:docker_compose}
+\end{figure}
+
+\section{Récapitulatif de l'architecture}
+
+\begin{table}[H]
+    \centering
+    \begin{tabularx}{\textwidth}{|l|l|l|X|}
+        \hline
+        \textbf{Composant} & \textbf{Port} & \textbf{Technologie} & \textbf{Rôle} \\
+        \hline
+        Eureka Server & 8761 & Spring Cloud Netflix & Découverte de services \\
+        \hline
+        API Gateway & 8079 & Spring Cloud Gateway & Routage et load balancing \\
+        \hline
+        Notes Service & 8082 & Spring Boot & Gestion des notes \\
+        \hline
+        Absence Service & 8081 & Spring Boot & Gestion d'absence \\
+        \hline
+        PostgreSQL Notes & 5432 & PostgreSQL 17 & Base de données Notes \\
+        \hline
+        PostgreSQL Absence & 5433 & PostgreSQL 17 & Base de données Absence \\
+        \hline
+    \end{tabularx}
+    \caption{Récapitulatif des composants de l'architecture}
+\end{table}
+
+% ==================== CONCLUSION ====================
+\chapter{Conclusion}
+
+\section{Bilan technique}
+
+Ce projet nous a permis d'explorer et de comparer trois approches de développement d'applications orientées services :
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{SOAP/JAX-WS} : Approche traditionnelle avec contrat formel, adaptée aux environnements entreprise nécessitant des garanties de fiabilité et de sécurité.
+
+    \item \textbf{REST/JAX-RS} : Approche moderne, légère et flexible, idéale pour les applications web et mobiles nécessitant des échanges performants.
+
+    \item \textbf{Microservices/Spring Cloud} : Architecture distribuée complète permettant la scalabilité, l'indépendance des services et le déploiement continu.
+\end{enumerate}
+
+\section{Compétences acquises}
+
+\begin{itemize}[leftmargin=*]
+    \item Conception et implémentation de services web SOAP et REST
+    \item Architecture microservices avec Spring Boot et Spring Cloud
+    \item Mise en œuvre de patterns de communication (Service Discovery, API Gateway)
+    \item Conteneurisation avec Docker et orchestration avec Docker Compose
+    \item Persistance avec JPA/Hibernate et PostgreSQL
+    \item Développement de clients (SOAP, REST, Swing)
+\end{itemize}
+
+\section{Perspectives d'amélioration}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Sécurité} : Intégration de Spring Security avec JWT et OAuth2
+    \item \textbf{Résilience} : Ajout de Circuit Breaker (Resilience4j)
+    \item \textbf{Monitoring} : Intégration de Spring Boot Actuator avec Prometheus/Grafana
+    \item \textbf{CI/CD} : Pipeline d'intégration et déploiement continu
+    \item \textbf{Kubernetes} : Migration vers une orchestration plus avancée
+\end{itemize}
+
+\section{Mot de fin}
+
+Ces travaux pratiques constituent une expérience enrichissante dans le domaine de l'architecture orientée services. La comparaison des différentes approches nous a permis de comprendre les compromis à faire selon les contextes d'utilisation et les exigences non fonctionnelles. L'architecture microservices, bien que plus complexe à mettre en œuvre, offre une flexibilité et une scalabilité indispensables pour les applications modernes.
+
+\vspace{1cm}
+\begin{flushright}
+    \textit{Mohamed El Hasnaoui}\\
+    \textit{4\textsuperscript{ème} année Génie Informatique}\\
+    \textit{ENSA Fès -- 2025/2026}
+\end{flushright}
+
+\end{document}
